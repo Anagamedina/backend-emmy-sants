@@ -1,11 +1,4 @@
 {
-  "name": "Floristeria-Emmy-Sants-server",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
-  },
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
@@ -19,5 +12,12 @@
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
-  }
+  },
+  "name": "Floristeria-Emmy-Sants-server",
+  "private": true,
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "version": "0.1.0"
 }
