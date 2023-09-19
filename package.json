@@ -13,7 +13,7 @@
   "devDependencies": {
     "nodemon": "^3.0.1"
   },
-  "name": "Floristeria-Emmy-Sants-server",
+  "name": "floristeria-emmy-sants-server",
   "private": true,
   "scripts": {
     "dev": "nodemon server.js",
