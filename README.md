@@ -7,8 +7,8 @@ Owner's Control Panel
 
 We've implemented a robust and user-friendly control panel for the florist owner. From this panel, she can manage all aspects of her online business:
 
-##Product Management:
-    Easily add new products, update details like name, description, price, and stock, and remove products that are no longer available.
+##Product Management
+Easily add new products, update details like name, description, price, and stock, and remove products that are no longer available.
 
 ##Order Management:
     Review all received orders, mark them as delivered, and maintain a record of past orders.
