@@ -7,20 +7,21 @@ Owner's Control Panel
 
 We've implemented a robust and user-friendly control panel for the florist owner. From this panel, she can manage all aspects of her online business:
 
-    ##Product Management:
+##Product Management:
     Easily add new products, update details like name, description, price, and stock, and remove products that are no longer available.
 
-    ##Order Management:
+##Order Management:
     Review all received orders, mark them as delivered, and maintain a record of past orders.
 
-    ##Stock Control: 
+##Stock Control: 
     Keep product stock up-to-date, ensuring accurate product availability at all times.
 
-    ##Image Management: 
+##Image Management: 
     Simplify product image uploads using the Cloudinary library, ensuring visually appealing product presentation on the website.
 
-    ##Secure Authentication:
+##Secure Authentication:
     We provide a secure authentication system, allowing the owner to log into her control panel privately and securely.
+    
 ![Project Image]")
 
 ## Deployment
