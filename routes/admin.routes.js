@@ -1,4 +1,4 @@
 // routes/admin.routes.js
-const Movie = require('../models/Movie.model');
+const Product = require('../models/Product.model');
 const fileUploader = require('../config/cloudinary.config');
 
