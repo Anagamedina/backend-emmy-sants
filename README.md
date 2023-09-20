@@ -46,10 +46,23 @@ const uconst usuarioSchema = new Schema({
   nombre: String,
   correoElectronico: String,
   contrasena: String,
+  IsAdmin: false
+ });
+
+});
+```
+
+#### Admin.model.js
+```js
+const uconst usuarioSchema = new Schema({
+  nombre: String,
+  correoElectronico: String,
+  contrasena: String,
   IsAdmin: true
  });
 
 });
+
 ```
 #### Producto.model.js
 ```js
