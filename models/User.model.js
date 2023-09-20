@@ -1,6 +1,5 @@
 const { Schema, model } = require("mongoose");
 
-
 const userSchema = new Schema(
   {
     email: {
@@ -18,10 +17,12 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Name is required."],
     },
-    IsAdmin: false
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
-    // this second object adds extra properties: `createdAt` and `updatedAt`
     timestamps: true,
   }
 );

@@ -1,6 +1,5 @@
 const { Schema, model } = require("mongoose");
 
-
 const AdminSchema = new Schema(
   {
     email: {
@@ -18,16 +17,13 @@ const AdminSchema = new Schema(
       type: String,
       required: [true, "Name is required."],
     },
-
     isAdmin: {
-        type: Boolean,
-        default: false, 
+      type: Boolean,
+      default: false,
     },
-    unnum: {
-        type: String,
-        unique: true,
-      },
-    
+  
+  },
+  {
     timestamps: true,
   }
 );
@@ -35,3 +31,4 @@ const AdminSchema = new Schema(
 const Admin = model("Admin", AdminSchema);
 
 module.exports = Admin;
+//enum???
