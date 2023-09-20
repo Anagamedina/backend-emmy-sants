@@ -23,7 +23,7 @@ const AdminSchema = new Schema(
         type: Boolean,
         default: false, 
     },
-    unnum: {
+    enum: {
         type: String,
         unique: true,
       },
