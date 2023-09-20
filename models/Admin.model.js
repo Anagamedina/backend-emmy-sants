@@ -1,7 +1,7 @@
 const { Schema, model } = require("mongoose");
 
 
-const userSchema = new Schema(
+const AdminSchema = new Schema(
   {
     email: {
       type: String,
@@ -18,14 +18,20 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Name is required."],
     },
-    IsAdmin: false
-  },
-  {
-    // this second object adds extra properties: `createdAt` and `updatedAt`
+
+    isAdmin: {
+        type: Boolean,
+        default: false, 
+    },
+    unnum: {
+        type: String,
+        unique: true,
+      },
+    
     timestamps: true,
   }
 );
 
-const User = model("User", userSchema);
+const Admin = model("Admin", AdminSchema);
 
-module.exports = User;
+module.exports = Admin;
