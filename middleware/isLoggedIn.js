@@ -7,4 +7,4 @@ function isAdmin(req, res, next) {
     }
     
 }
-Module.exports= {isAdmin};
+module.exports= {isAdmin};

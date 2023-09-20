@@ -31,4 +31,3 @@ const AdminSchema = new Schema(
 const Admin = model("Admin", AdminSchema);
 
 module.exports = Admin;
-//enum???

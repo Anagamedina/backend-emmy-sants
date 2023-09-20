@@ -6,7 +6,7 @@ const ProductSchema = new Schema(
     nombre: String,
     descripcion: String,
     precio: Number,
-    Stock: Number,
+    stock: Number,
     categoria: String, 
     imagen: String, // URL de la imagen del producto
   

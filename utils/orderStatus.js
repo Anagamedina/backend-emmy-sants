@@ -1,7 +1,8 @@
 const OrderStatus = {
-    PENDIENTE : 'Pendiente',
+    PENDIENTE : 'Pendiente', 
+    PAGADO : 'Pagado', 
     EN_PROCESO : 'En proceso ',
-    COMPLETADO : 'Completado',
+    COMPLETADO : 'Completado', 
     CANCELADO : 'Cancelado',
 
 };
