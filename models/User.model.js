@@ -18,7 +18,7 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Name is required."],
     },
-    IsAdmin: false
+    IsAdmin: [false]
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`
