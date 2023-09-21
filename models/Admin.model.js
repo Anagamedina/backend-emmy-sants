@@ -21,9 +21,17 @@ const AdminSchema = new Schema(
       type: Boolean,
       default: false,
     },
+<<<<<<< HEAD
   
   },
   {
+=======
+    enum: {
+        type: String,
+        unique: true,
+      },
+    
+>>>>>>> bf1e1a3d08694de17dffb584f13230e05a38f2bc
     timestamps: true,
   }
 );
