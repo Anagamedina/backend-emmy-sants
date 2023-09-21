@@ -6,7 +6,7 @@ const multer = require('multer');
 // Importa el middleware isLoggedIn que contiene la función isAdmin
 const { isAdmin } = require('../middleware/isLoggedIn');
 
-// Ruta para obtener la lista de productos (accesible solo para administradores)
+//Lista para mostrar lista de productos 
 router.get('/' , async (req, res) => { 
     Product.find().then(data=>{
       res.send(data)
