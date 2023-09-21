@@ -51,9 +51,22 @@ router.get("/orders/:id", (req, res, next) => {
 
 
 
-//ruta para actualizar el estado de un pedido 
-router.put("/orders/:id", (req, res, next) => {
+router.put('/orders/:id' /*,isAdmin*/, (req, res) => {
+  let id = req.params.id
+  let body = req.body
 
+  Product.findByIdAndUpdate(id,body).then(data=>{
+    res.send(data)
+  }) 
+});
+
+// Ruta para eliminar un producto (accesible solo para administradores)
+router.delete('/orders/:id',/* isAdmin,*/ (req, res) => {
+  let id = req.params.id 
+
+  Product.findByIdAndDelete(id ).then(data=>{
+    res.send(data)
+  })  
 });
 
 module.exports = router;
