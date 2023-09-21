@@ -17,13 +17,10 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Name is required."],
     },
-<<<<<<< HEAD
     isAdmin: {
       type: Boolean,
       default: false,
     },
-=======
->>>>>>> bf1e1a3d08694de17dffb584f13230e05a38f2bc
   },
   {
     timestamps: true,

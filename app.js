@@ -18,11 +18,11 @@ require("./config")(app);
 // 👇 Start handling routes here
 const indexRoutes = require("./routes/index.routes");
 const authRoutes = require("./routes/auth.routes");
-const productRoutes = require("./routes/product.routes");
+const productsRoutes = require("./routes/products.routes");
 const ordersRoutes = require("./routes/orders.routes");
 
 app.use("/api", indexRoutes);
-app.use("/api/products", productRoutes); 
+app.use("/api/products", productsRoutes); 
 app.use("/api/orders", ordersRoutes);
 app.use("/auth", authRoutes);
 
