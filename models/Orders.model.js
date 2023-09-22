@@ -5,7 +5,7 @@ const OrdersSchema = new Schema(
   {
     products: [
       {
-        product: { type: Schema.Types.ObjectId, ref: 'Producto' },
+        product: { type: Schema.Types.ObjectId, ref: 'Product' },
         amount: Number
       }
     ],

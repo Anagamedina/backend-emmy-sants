@@ -45,10 +45,10 @@ router.get('/:id' , (req, res) => {
 // Ruta para actualizar un producto existente (accesible solo para administradores)
 
 //put ->  http://localhost:5005/api/products/650b3a7a44f240378c459dae
-router.put('/:id' /*,isAdmin*/, (req, res) => {
+router.put('/:id' ,fileUploader.single('product-image') /*,isAdmin*/, (req, res) => {
   let id = req.params.id
   let body = req.body
-
+  body.imagen =  req?.file?.path,
   Product.findByIdAndUpdate(id,body).then(data=>{
     res.send(data)
   }) 
