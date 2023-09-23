@@ -15,7 +15,7 @@ router.get("/orders", (req, res, next)=> {
   });
 })
 
-//????? /api/orders 
+// /api/orders 
 router.get('/' , async (req, res) => {
   Orders.find()
   .populate({ path: 'products', populate: { path: 'product' }})
@@ -51,7 +51,7 @@ router.post("/create", (req, res, next) => {
     })
     .catch((err) => res.json(err));
 });
-//
+//operador de actualización en MongoDB que se utiliza para incrementar o decrementar el valor de un campo numérico 
 
 router.get("/testIncrement",async (req, res, next) => {
   // http://localhost:5005/api/products
@@ -87,6 +87,35 @@ router.put('/orders/:id' , (req, res) => {
     res.send(data)
   })
 });
+
+// Nueva ruta para restar stock de un producto específico en todos los pedidos
+router.put('/decrementStock/:productId/:amount', (req, res) => {
+  const { productId, amount } = req.params;
+
+  // Restar el stock del producto específico en todos los pedidos
+  Orders.updateMany(
+    { 'products.product': mongoose.Types.ObjectId(productId) },
+    { $inc: { 'products.$.amount': -parseInt(amount) } }
+  )
+    .then((updatedOrders) => {
+      // Verificar si hubo algún pedido actualizado
+      if (updatedOrders.nModified > 0) {
+        res.json({ message: 'Stock restado en todos los pedidos exitosamente.' });
+      } else {
+        res.status(404).json({ error: 'Producto no encontrado en ningún pedido.' });
+      }
+    })
+    .catch((error) => {
+      res.status(500).json({ error: 'Error interno del servidor.' });
+    });
+});
+
+
+
+
+
+
+
 
 
 router.delete('/orders/:id', (req, res) => {
