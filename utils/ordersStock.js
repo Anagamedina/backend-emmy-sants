@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const Orders = require('../models/Orders.model');
 var mongoose = require('mongoose');
+
 const Product = require('../models/Product.model');
 
 
@@ -29,8 +30,18 @@ router.post("/create", (req, res, next) => {
   const { products, usuario} = req.body;  
   
 
+  //check stock
+  model.find({
+    '_id' : [
+        '4ed3ede8844f0f351100000c',
+        '4ed3f117a844e0471100000d', 
+        '4ed3f18132f50c491100000e'
+    ]
+}, function(err, docs){
+    console.log(docs);
+});
 
-//convertir en ObjetId
+//convertir en ObjetIds
   let productsOID = products.map(p =>({product: new mongoose.Types.ObjectId(p.product), amount:p.amount}))
   Orders.create({
     products: productsOID,
