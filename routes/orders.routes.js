@@ -2,6 +2,7 @@ const router = require("express").Router();
 const Orders = require('../models/Orders.model');
 var mongoose = require('mongoose');
 const Product = require('../models/Product.model');
+const Storage = require('../models/Storage.model');
 
 
 //Ruta para obtener lista de pedidos
@@ -27,24 +28,44 @@ router.get('/' , async (req, res) => {
 
 router.post("/create", (req, res, next) => {
   const { products, usuario} = req.body;  
-  
+   
+  // console.log(products);
+  //     products.map(({product, amount}) =>{
+  //       console.log(product,amount);
 
+  //       // Storage.findByIdAndUpdate({product:product} , { $inc: { "amount": -amount} }).then(x=>{
+  //       //   console.log(x);
+  //       // })
+  //       let oid =  mongoose.Types.ObjectId
+  //       Storage.find( {product: product}   ).then(x=>{
+  //         console.log(x);
+  //       })
+  //     }) 
 
+  // return
 //convertir en ObjetId
   let productsOID = products.map(p =>({product: new mongoose.Types.ObjectId(p.product), amount:p.amount}))
   Orders.create({
     products: productsOID,
     usuario
-  })
-    .then((order) => {
+  }).then((order) => {
       
       //restar stock 
-      products.map(({product,amount}) =>{
-        Product.findByIdAndUpdate(product , { $inc: { stock: -amount} }).then(x=>{
+      // products.map(({product,amount}) =>{
+      //   Product.findByIdAndUpdate(product , { $inc: { stock: -amount} }).then(x=>{
+      //     console.log(x);
+      //   })
+      // }) 
+      console.log(products);
+      products.map(({product, amount}) =>{
+        console.log(product);
+
+        Storage.findOneAndUpdate({product:product} , { $inc: { amount: -amount} }).then(x=>{
           console.log(x);
         })
       }) 
 
+  
       res.json(order)  
 
 
@@ -62,8 +83,6 @@ router.get("/testIncrement",async (req, res, next) => {
 
  
 });
-//
-
 
 
 //ruta para obtener detalles de un pedido especifico
@@ -109,14 +128,6 @@ router.put('/decrementStock/:productId/:amount', (req, res) => {
       res.status(500).json({ error: 'Error interno del servidor.' });
     });
 });
-
-
-
-
-
-
-
-
 
 router.delete('/orders/:id', (req, res) => {
   let id = req.params.id

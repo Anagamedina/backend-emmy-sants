@@ -2,17 +2,20 @@ const router = require("express").Router();
 const Product = require('../models/Product.model');
 const fileUploader = require('../config/cloudinary.config');
 const multer = require('multer');
+const Storage = require('../models/Storage.model');
 
 // Importa el middleware isLoggedIn que contiene la función isAdmin
 const { isAdmin } = require('../middleware/isLoggedIn');
 
 //Lista para mostrar lista de productos 
 router.get('/' , async (req, res) => { 
-    Product.find().then(data=>{
-      res.send(data)
-    }) 
+  Product.find().then(data=>{
+    res.send(data)
+  }) 
 });
- 
+
+
+
  
 // Ruta para crear un nuevo producto (accesible solo para administradores)
 router.post('/create', fileUploader.single('product-image'), (req, res) => {
@@ -23,11 +26,19 @@ router.post('/create', fileUploader.single('product-image'), (req, res) => {
       nombre,
       descripcion,
       precio,
-      stock,
+      // stock,
       categoria,
       imagen: req?.file?.path,
     })
       .then(newlyCreatedProductFromDB => {
+
+        //crear storage
+        Storage.create({
+          product: newlyCreatedProductFromDB,
+          amount: 10
+        }).then(str=>console.log(str))
+
+        //enviar respuesta
         res.json(newlyCreatedProductFromDB);
       })
       .catch(error => console.log(`Error while creating a new product: ${error}`));
