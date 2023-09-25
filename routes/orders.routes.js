@@ -6,7 +6,7 @@ const Storage = require('../models/Storage.model');
 
 
 //Ruta para obtener lista de pedidos
-router.get("/orders", (req, res, next)=> {
+router.get("/orders",  (req, res, next)=> {
   Orders.find ()
   .then((orders)=> {
       res.json(orders);  
@@ -74,15 +74,13 @@ router.post("/create", (req, res, next) => {
 });
 //operador de actualización en MongoDB que se utiliza para incrementar o decrementar el valor de un campo numérico 
 
-router.get("/testIncrement",async (req, res, next) => {
-  // http://localhost:5005/api/products
-  // http://localhost:5005/api/orders/testIncrement
-      //restar stock 
-      let gg = await Product.findByIdAndUpdate ("650b40f868ed4fb9e5adfa96" , { $inc: { stock: -5} })
-      res.json(gg)  
-
- 
-});
+// router.get("/testIncrement",async (req, res, next) => {
+//   // http://localhost:5005/api/products
+//   // http://localhost:5005/api/orders/testIncrement
+//       //restar stock 
+//       let gg = await Product.findByIdAndUpdate ("650b40f868ed4fb9e5adfa96" , { $inc: { stock: -5} })
+//       res.json(gg)     
+// });
 
 
 //ruta para obtener detalles de un pedido especifico
@@ -108,26 +106,26 @@ router.put('/orders/:id' , (req, res) => {
 });
 
 // Nueva ruta para restar stock de un producto específico en todos los pedidos
-router.put('/decrementStock/:productId/:amount', (req, res) => {
-  const { productId, amount } = req.params;
+// router.put('/decrementStock/:productId/:amount', (req, res) => {
+//   const { productId, amount } = req.params;
 
-  // Restar el stock del producto específico en todos los pedidos
-  Orders.updateMany(
-    { 'products.product': mongoose.Types.ObjectId(productId) },
-    { $inc: { 'products.$.amount': -parseInt(amount) } }
-  )
-    .then((updatedOrders) => {
-      // Verificar si hubo algún pedido actualizado
-      if (updatedOrders.nModified > 0) {
-        res.json({ message: 'Stock restado en todos los pedidos exitosamente.' });
-      } else {
-        res.status(404).json({ error: 'Producto no encontrado en ningún pedido.' });
-      }
-    })
-    .catch((error) => {
-      res.status(500).json({ error: 'Error interno del servidor.' });
-    });
-});
+//   // Restar el stock del producto específico en todos los pedidos
+//   Orders.updateMany(
+//     { 'products.product': mongoose.Types.ObjectId(productId) },
+//     { $inc: { 'products.$.amount': -parseInt(amount) } }
+//   )
+//     .then((updatedOrders) => {
+//       // Verificar si hubo algún pedido actualizado
+//       if (updatedOrders.nModified > 0) {
+//         res.json({ message: 'Stock restado en todos los pedidos exitosamente.' });
+//       } else {
+//         res.status(404).json({ error: 'Producto no encontrado en ningún pedido.' });
+//       }
+//     })
+//     .catch((error) => {
+//       res.status(500).json({ error: 'Error interno del servidor.' });
+//     });
+// });
 
 router.delete('/orders/:id', (req, res) => {
   let id = req.params.id

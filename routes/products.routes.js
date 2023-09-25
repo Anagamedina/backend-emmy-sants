@@ -18,7 +18,7 @@ router.get('/' , async (req, res) => {
 
  
 // Ruta para crear un nuevo producto (accesible solo para administradores)
-router.post('/create', fileUploader.single('product-image'), (req, res) => {
+router.post('/create', isAdmin, fileUploader.single('product-image'), (req, res) => {
     const { nombre, descripcion, precio, stock, categoria, imagen } = req.body;
   
     // Utiliza el método create para crear y guardar un nuevo producto en la base de datos
@@ -26,7 +26,6 @@ router.post('/create', fileUploader.single('product-image'), (req, res) => {
       nombre,
       descripcion,
       precio,
-      // stock,
       categoria,
       imagen: req?.file?.path,
     })
@@ -35,7 +34,7 @@ router.post('/create', fileUploader.single('product-image'), (req, res) => {
         //crear storage
         Storage.create({
           product: newlyCreatedProductFromDB,
-          amount: 10
+          amount: 10 //cantidad <input type="number" name="cantidad" placeholder="Cantidad de unidades disponibles">
         }).then(str=>console.log(str))
 
         //enviar respuesta
