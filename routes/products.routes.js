@@ -6,9 +6,12 @@ const Storage = require('../models/Storage.model');
 
 // Importa el middleware isLoggedIn que contiene la función isAdmin
 const { isAdmin } = require('../middleware/isLoggedIn');
+const { isAuthenticated } = require("../middleware/jwt.middleware.js");
+
+// const { isAdmin } = require("../middleware/admin.middleware");
 
 //Lista para mostrar lista de productos 
-router.get('/' , async (req, res) => { 
+router.get('/' ,  (req, res) => { 
   Product.find().then(data=>{
     res.send(data)
   }) 
@@ -18,7 +21,7 @@ router.get('/' , async (req, res) => {
 
  
 // Ruta para crear un nuevo producto (accesible solo para administradores)
-router.post('/create', isAdmin, fileUploader.single('product-image'), (req, res) => {
+router.post('/create', isAuthenticated, isAdmin, fileUploader.single('product-image'), (req, res) => {
     const { nombre, descripcion, precio, stock, categoria, imagen } = req.body;
   
     // Utiliza el método create para crear y guardar un nuevo producto en la base de datos
@@ -44,7 +47,7 @@ router.post('/create', isAdmin, fileUploader.single('product-image'), (req, res)
   });
   
 
-// Ruta para obtener detalles de un producto específico (accesible solo para administradores)
+// Ruta para obtener detalles de un producto específico 
 router.get('/:id' , (req, res) => {
   let id = req.params.id
   Product.findById(id).then(data=>{
@@ -52,7 +55,7 @@ router.get('/:id' , (req, res) => {
   }) 
 });
 
-// Ruta para actualizar un producto existente (accesible solo para administradores)
+// Ruta para actualizar un producto existente 
 
 //put ->  http://localhost:5005/api/products/650b3a7a44f240378c459dae
 router.put('/:id' ,fileUploader.single('product-image') /*,isAdmin*/, (req, res) => {
@@ -68,7 +71,7 @@ router.put('/:id' ,fileUploader.single('product-image') /*,isAdmin*/, (req, res)
 router.delete('/:id',/* isAdmin,*/ (req, res) => {
   let id = req.params.id 
 
-  Product.findByIdAndDelete(id ).then(data=>{
+  Product.findByIdAndDelete(id).then(data=>{
     res.send(data)
   })  
 });

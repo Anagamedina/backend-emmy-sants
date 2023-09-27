@@ -50,7 +50,7 @@ router.post("/create", (req, res, next) => {
     usuario
   }).then((order) => {
       
-      //restar stock 
+      //restar stock en el mismo producto
       // products.map(({product,amount}) =>{
       //   Product.findByIdAndUpdate(product , { $inc: { stock: -amount} }).then(x=>{
       //     console.log(x);

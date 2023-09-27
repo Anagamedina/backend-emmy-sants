@@ -1,40 +1,43 @@
 const express = require("express");
 const router = express.Router();
-
-// ℹ️ Handles password encryption
 const bcrypt = require("bcrypt");
-
-// ℹ️ Handles password encryption
 const jwt = require("jsonwebtoken");
-
-// Require the User model in order to interact with the database
 const User = require("../models/User.model");
 
-// Require necessary (isAuthenticated) middleware in order to control access to specific routes
+//const { isAuthenticated, isAdmin } = require("../middleware/jwt.middleware.js");
 const { isAuthenticated } = require("../middleware/jwt.middleware.js");
-
-// How many rounds should bcrypt run the salt (default - 10 rounds)
 const saltRounds = 10;
+
+// // Ruta para el panel de control de administradores
+// router.get("/admin-panel", isAuthenticated, isAdmin, (req, res, next) => {
+//   // Aquí deberías renderizar la página del panel de control para administradores
+//   // o enviar algún tipo de respuesta adecuada.
+// });
+
+// // Ruta para la tienda en línea de compradores
+// router.get("/online-store", isAuthenticated, (req, res, next) => {
+//   // Aquí deberías renderizar la página de la tienda en línea para compradores
+//   // o enviar algún tipo de respuesta adecuada.
+// });
+
 
 // POST /auth/signup  - Creates a new user in the database
 router.post("/signup", (req, res, next) => {
   console.log(req.body);
   const { email, password, name } = req.body;
 
-  // Check if email or password or name are provided as empty strings
   if (email === "" || password === "" || name === "") {
     res.status(400).json({ message: "Provide email, password and name" });
     return;
   }
 
-  // This regular expression check that the email is of a valid format
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
   if (!emailRegex.test(email)) {
     res.status(400).json({ message: "Provide a valid email address." });
     return;
   }
 
-  // This regular expression checks password for special characters and minimum length
+
   const passwordRegex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
   if (!passwordRegex.test(password)) {
     res.status(400).json({
@@ -44,36 +47,31 @@ router.post("/signup", (req, res, next) => {
     return;
   }
 
-  // Check the users collection if a user with the same email already exists
   User.findOne({ email })
     .then((foundUser) => {
       // If the user with the same email already exists, send an error response
       if (foundUser) {
-        res.status(400).json({ message: "User already exists." });
+        res.status(400).json({ message: "The email you entered is already registered, please try with another one." });
         return;
       }
 
-      // If email is unique, proceed to hash the password
       const salt = bcrypt.genSaltSync(saltRounds);
       const hashedPassword = bcrypt.hashSync(password, salt);
 
       // Create the new user in the database
-      // We return a pending promise, which allows us to chain another `then`
-      return User.create({ email, password: hashedPassword, name });
+      return User.create({ email, password: hashedPassword, name });  //isAdmin: false
     })
     .then((createdUser) => {
-      // Deconstruct the newly created user object to omit the password
-      // We should never expose passwords publicly
-      const { email, name, _id } = createdUser;
+      const { email, name, _id } = createdUser; //isAdmin?
 
       // Create a new object that doesn't expose the password
-      const user = { email, name, _id };
-
-      // Send a json response containing the user object
+      const user = { email, name, _id };  //isAdmin?
       res.status(201).json({ user: user });
     })
-    .catch((err) => next(err)); // In this case, we send error handling to the error handling middleware.
+    .catch((err) => next(err)); 
 });
+
+
 
 // POST  /auth/login - Verifies email and password and returns a JWT
 router.post("/login", (req, res, next) => {
@@ -116,16 +114,47 @@ router.post("/login", (req, res, next) => {
         res.status(401).json({ message: "Unable to authenticate the user" });
       }
     })
-    .catch((err) => next(err)); // In this case, we send error handling to the error handling middleware.
+    .catch((err) => next(err)); 
 });
+
+
+
+// router.post("/login", (req, res, next) => {
+//   // ... (código de autenticación)
+
+//   if (passwordCorrect) {
+//     // ...
+
+//     if (isAdmin) {
+//       // Redirigir al panel de control de administradores
+//       res.redirect("/admin-panel");
+//     } else {
+//       // Redirigir a la tienda en línea para compradores
+//       res.redirect("/online-store");
+//     }
+//   } else {
+//     res.status(401).json({ message: "Unable to authenticate the user" });
+//   }
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // GET  /auth/verify  -  Used to verify JWT stored on the client
 router.get("/verify", isAuthenticated, (req, res, next) => {
-  // If JWT token is valid the payload gets decoded by the
-  // isAuthenticated middleware and is made available on `req.payload`
-  // console.log(`req.payload`, req.payload);
-
-  // Send back the token payload object containing the user data
   res.status(200).json(req.payload);
 });
 
