@@ -13,7 +13,11 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Password is required."],
     },
-    name: {
+    firstName: {
+      type: String,
+      required: [true, "Name is required."],
+    },
+    lastName: {
       type: String,
       required: [true, "Name is required."],
     },

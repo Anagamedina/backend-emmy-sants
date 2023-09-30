@@ -3,21 +3,36 @@ const Orders = require('../models/Orders.model');
 var mongoose = require('mongoose');
 const Product = require('../models/Product.model');
 const Storage = require('../models/Storage.model');
-
+const { isAuthenticated } = require("../middleware/jwt.middleware.js");
+const { isAdmin } = require('../middleware/isLoggedIn');
 
 //Ruta para obtener lista de pedidos
-router.get("/orders",  (req, res, next)=> {
-  Orders.find ()
-  .then((orders)=> {
-      res.json(orders);  
-})
-.catch ((error) => {
-  res.status(500).json ({ error});
-  });
-})
+
+
+// // Ejemplo de ruta para usuarios regulares
+// router.get('/orders/history', isAuthenticated, (req, res) => {
+  // req.payload  
+//   // Lógica para obtener el historial de pedidos del usuario
+//   // y mostrarlo en la página del usuario regular
+// });
+
+
+
+// router.get("/order/:id",  (req, res, next)=> {
+//   Orders.find ()
+//   .then((orders)=> {
+//       res.json(orders);  
+// })
+// .catch ((error) => {
+//   res.status(500).json ({ error});
+//   });
+// })
+
+
+
 
 // /api/orders 
-router.get('/' , async (req, res) => {
+router.get('/' , isAuthenticated, isAdmin, async (req, res) => {
   Orders.find()
   .populate({ path: 'products', populate: { path: 'product' }})
   .then(data=>{
@@ -26,41 +41,22 @@ router.get('/' , async (req, res) => {
 });
 
 
-router.post("/create", (req, res, next) => {
+
+
+//Este es ruta de administradora por lo de storage?
+router.post("/create", isAuthenticated, (req, res, next) => {
   const { products, usuario} = req.body;  
    
-  // console.log(products);
-  //     products.map(({product, amount}) =>{
-  //       console.log(product,amount);
-
-  //       // Storage.findByIdAndUpdate({product:product} , { $inc: { "amount": -amount} }).then(x=>{
-  //       //   console.log(x);
-  //       // })
-  //       let oid =  mongoose.Types.ObjectId
-  //       Storage.find( {product: product}   ).then(x=>{
-  //         console.log(x);
-  //       })
-  //     }) 
-
-  // return
 //convertir en ObjetId
   let productsOID = products.map(p =>({product: new mongoose.Types.ObjectId(p.product), amount:p.amount}))
   Orders.create({
     products: productsOID,
     usuario
   }).then((order) => {
-      
-      //restar stock en el mismo producto
-      // products.map(({product,amount}) =>{
-      //   Product.findByIdAndUpdate(product , { $inc: { stock: -amount} }).then(x=>{
-      //     console.log(x);
-      //   })
-      // }) 
+ 
       console.log(products);
-      products.map(({product, amount}) =>{
-        console.log(product);
-
-        Storage.findOneAndUpdate({product:product} , { $inc: { amount: -amount} }).then(x=>{
+      products.map(({product, amount}) => { 
+        return Storage.findOneAndUpdate({product:product} , { $inc: { amount: -amount} }).then(x=>{
           console.log(x);
         })
       }) 
@@ -72,15 +68,8 @@ router.post("/create", (req, res, next) => {
     })
     .catch((err) => res.json(err));
 });
-//operador de actualización en MongoDB que se utiliza para incrementar o decrementar el valor de un campo numérico 
 
-// router.get("/testIncrement",async (req, res, next) => {
-//   // http://localhost:5005/api/products
-//   // http://localhost:5005/api/orders/testIncrement
-//       //restar stock 
-//       let gg = await Product.findByIdAndUpdate ("650b40f868ed4fb9e5adfa96" , { $inc: { stock: -5} })
-//       res.json(gg)     
-// });
+//localhost3000/orderFInish?orderid=lksdafdasdnpasdjasdadasd
 
 
 //ruta para obtener detalles de un pedido especifico

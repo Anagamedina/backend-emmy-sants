@@ -7,14 +7,18 @@ const ProductSchema = new Schema(
     descripcion: String,
     precio: Number,
     // stock: Number,
-    categoria: String, 
-    imagen: String, // URL de la imagen del producto
-  
-  });
+    categoria: {
+      type: String,
+      enum: ["plantas", "ramos"],
+    }, 
+    imagen: String,  
+  },
+  );
 
 const Product = model("Product", ProductSchema);
 
 module.exports = Product;
 
 
+  
   
