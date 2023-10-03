@@ -13,7 +13,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary,
   params: {
-    allowed_formats: ['jpg', 'png'],
+    allowed_formats: ['jpg', 'png', 'gif'],
     folder: 'products' 
   }
 });
