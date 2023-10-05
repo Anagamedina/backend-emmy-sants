@@ -9,12 +9,17 @@ const { isAdmin } = require('../middleware/isLoggedIn');
 //Ruta para obtener lista de pedidos
 
 
-// // Ejemplo de ruta para usuarios regulares
-// router.get('/orders/history', isAuthenticated, (req, res) => {
-  // req.payload  
-//   // Lógica para obtener el historial de pedidos del usuario
-//   // y mostrarlo en la página del usuario regular
-// });
+// Ejemplo de ruta para usuarios regulares
+router.get('/orders/history', isAuthenticated, (req, res) => {
+  const userId = req.payload.id;
+  Orders.find ({usuario:userId})
+  .populate({path:'products.product'})
+  .then(userOrders => {
+    res.json(userOrders);
+    }).catch((err)=>{res.status(500).json({ error: 'Error interno del servidor.' });
+  });
+});
+
 
 
 
@@ -44,24 +49,23 @@ router.get('/' , isAuthenticated, isAdmin, async (req, res) => {
 
 
 //Este es ruta de administradora por lo de storage?
-router.post("/create", isAuthenticated, (req, res, next) => {
+router.post("/create", /*isAuthenticated,*/ async (req, res, next) => {
   const { products, usuario} = req.body;  
-   
+  let stripeSession = await createStripeSession()
 //convertir en ObjetId
   let productsOID = products.map(p =>({product: new mongoose.Types.ObjectId(p.product), amount:p.amount}))
   Orders.create({
     products: productsOID,
-    usuario
-  }).then((order) => {
- 
+    usuario,
+    state:"Pendiente",
+    strapiID: stripeSession.id
+  }).then((order) => { 
       console.log(products);
       products.map(({product, amount}) => { 
         return Storage.findOneAndUpdate({product:product} , { $inc: { amount: -amount} }).then(x=>{
           console.log(x);
         })
       }) 
-
-  
       res.json(order)  
 
 
@@ -69,16 +73,50 @@ router.post("/create", isAuthenticated, (req, res, next) => {
     .catch((err) => res.json(err));
 });
 
+
+const Stripe = require("stripe");
+const stripe = new Stripe(
+  "sk_test_51NworTIamvwN9XVUBzNti2WhGDvdoagrQ3RDOxcsTpO2C7M8efP7Y18pkAsuY7iBpg1v9aZp2WOrTOml0N5qFcK500USulMfhg"
+);
+async function createStripeSession(){
+  let id = "q2343";
+  let amount = 22.22;
+  let storeName = "Floristeria-emmy-sants";
+  let currency = "EUR";
+  let domainNameFront = "http://localhost:3000";
+  
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price_data: {
+            currency: currency,
+            product_data: {
+              name: "Pedido de " + storeName,
+            },
+            unit_amount: (amount * 100).toFixed(0),
+          },
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      success_url: domainNameFront + "/success?id=" + id,
+      cancel_url: domainNameFront + "/categories?canceled=true",
+    });
+    return (session);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 //localhost3000/orderFInish?orderid=lksdafdasdnpasdjasdadasd
 
 
 //ruta para obtener detalles de un pedido especifico
 router.get("/orders/:id", (req, res, next) => {
   let id = req.params.id
-  let body = req.body
-
-
-  Orders.findByIdAndUpdate(id,body).then(data=>{
+  Orders.findById(id).then(data=>{
     res.send(data)
   })
 });

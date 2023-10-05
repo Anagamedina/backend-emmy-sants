@@ -14,6 +14,9 @@ const OrdersSchema = new Schema(
       type: String,
       enum: Object.values(OrderStatus), // Asegura que solo sea un estado de pedido válido
     },
+    strapiID:{ 
+      type: String
+    }
   },
   {
     timestamps: true,
