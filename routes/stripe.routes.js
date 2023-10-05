@@ -8,7 +8,7 @@ const Orders = require('../models/Orders.model');
 
 const router = require("express").Router();
 
-//not used
+//not used : Código para crear una sesión de pago en Stripe (no está en uso)
 router.get("/checkout", async (req, res) => {
   let id = "q2343";
   let amount = 22.22;
@@ -41,7 +41,7 @@ router.get("/checkout", async (req, res) => {
   }
 });
 
-
+//Código para verificar el estado de pago y actualizar el estado del pedido
 router.get("/checkPayment/:orderID", async (req, res) => {
   let id = req.params.orderID 
   let order = await Orders.findById(id) 

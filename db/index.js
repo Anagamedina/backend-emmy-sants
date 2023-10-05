@@ -7,11 +7,7 @@ const mongoose = require("mongoose");
 
 const MONGO_URI =  process.env.MONGODB_URI
 // const MONGO_URI =  "mongodb://127.0.0.1:27017/backend-emmy-sants";
-<<<<<<< HEAD
-// const MONGO_URI =  "mongodb+srv://anagamedina:ana15@cluster0.oproicw.mongodb.net/floristeria-emmy-sants";  
-=======
-const MONGO_URI =  process.env.MONGODB_URI
->>>>>>> 7a701bf56c9857ed8bb602c005d1281e23400654
+// const MONGO_URI =  process.env.MONGODB_URI
 
 
 mongoose
