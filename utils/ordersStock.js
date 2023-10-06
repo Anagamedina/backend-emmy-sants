@@ -123,3 +123,28 @@
 //   res.status(500).json ({ error});
 //   });
 // })
+
+
+//codigo extra
+// Ruta para crear un nuevo pedido (borrado el middleware de autenticación temporalmente)
+// router.post("/createOld", /*isAuthenticated,*/ async (req, res, next) => {
+//     const { products, usuario} = req.body;  
+//     let stripeSession = await createStripeSession();
+//     // Convertir en ObjectIds y crear el pedido
+//     let productsOID = products.map(p => ({ product: new mongoose.Types.ObjectId(p.product), amount: p.amount }));
+//     Orders.create({
+//       products: productsOID,
+//       usuario,
+//       state: "Pendiente",
+//       strapiID: stripeSession.id
+//     }).then((order) => { 
+//         // Actualiza la cantidad de productos en el almacen
+//         products.map(({ product, amount }) => { 
+//           return Storage.findOneAndUpdate({ product: product }, { $inc: { amount: -amount } }).then(x=>{
+//             console.log(x);
+//           })
+//         }) 
+//         res.json(order)  
+//       })
+//       .catch((err) => res.json(err));
+//   });

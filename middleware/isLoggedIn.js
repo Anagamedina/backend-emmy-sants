@@ -16,15 +16,16 @@
 // }
 // module.exports= {isAdmin};
 
-
 const isAdmin = (req, res, next) => {
-    if (req.payload.isAdmin) {
-      next();
-    } else {
-        res.status(403).json ({error:'Acceso no autorizado'}); 
-    }
-  };
-  
-  module.exports = {
-    isAdmin,
-  };
+  if (req.payload.isAdmin) {
+    next();
+  } else {
+    const error = new Error('Acceso no autorizado');
+    error.status = 403;
+    next(error);
+  }
+};
+
+module.exports = {
+  isAdmin,
+};

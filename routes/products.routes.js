@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const Product = require('../models/Product.model');
 const fileUploader = require('../config/cloudinary.config');
-// const multer = require('multer');
 const Storage = require('../models/Storage.model');
 
 // Importa el middleware isLoggedIn que contiene la función isAdmin
@@ -15,30 +14,6 @@ router.get('/' ,  (req, res) => {
     res.send(data)
   }) 
 });
-
-//CORS INVESTIGACION caso 1: metodos GET/HEAD/POST
-
-//const ACCEPT_ORIGINS = `[
-  //'http://localhost:3001', 'https://www.google.com/', 'https://www.facebook.com/'
-  //]
-// const origin = req.header ('origin')
-// if (ACCEPT_ORIGINS.includes(origin) || !origin) {
- //res.header('Access-Control-Allow-Origin', origin)
- //}
-  
-// }
-
-//CORS INVESTIGACION caso 2:
-//metodos complejos: PUT/PACTH/DELETE
-//CORS PRE-FLIGHT
-//OPTIONS (peticion previa)
-//app.options('/..., (req, res => {
-  //const origin =req.header ('origin')
-  // if (ACCEPT_ORIGINS.includes(origin) || !origin) {
- //res.header('Access-Control-Allow-Origin', origin)
- //res.header('Access-Control-Allow-Methods', GET, POST, PATCH, DELETE')
- //}
-
 
 
 
@@ -107,16 +82,6 @@ router.put('/:id' , isAuthenticated, isAdmin, fileUploader.single('product-image
     res.send(data)
   }) 
 });
-
-// router.put('/:id' /*,isAdmin*/, (req, res) => {
-//   let id = req.params.id
-//   let body = req.body
-  
-//   Product.findByIdAndUpdate(id,body, { new: true })
-//   .then(data=>{
-//     res.send(data)
-//   }) 
-//   });
 
 
 router.put('/:id/update-image', isAuthenticated, isAdmin,fileUploader.single('new-product-image'), (req, res) => {
