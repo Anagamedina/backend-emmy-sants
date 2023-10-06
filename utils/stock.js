@@ -1,103 +1,128 @@
-const productosIds = [
-    '4ed3ede8844f0f351100000c',
-    '4ed3f117a844e0471100000d',
-    '4ed3f18132f50c491100000e'
-];
+// const productosIds = [
+//     '4ed3ede8844f0f351100000c',
+//     '4ed3f117a844e0471100000d',
+//     '4ed3f18132f50c491100000e'
+// ];
 
-Producto.find({ '_id': { $in: productosIds } }, function(err, productos) {
-    if (err) {
-        console.error(err);
-        return;
-    }
+// Producto.find({ '_id': { $in: productosIds } }, function(err, productos) {
+//     if (err) {
+//         console.error(err);
+//         return;
+//     }
 
-    // Aquí tienes la lista de productos que deseas actualizar
-    // Ahora puedes restar la cantidad correspondiente a cada producto
-    // y actualizar la base de datos
-    productos.forEach(producto => {
-        // Encuentra la cantidad a restar de algún lugar (por ejemplo, desde el pedido)
-        const cantidadARestar = 10; // Ejemplo, debes establecer la cantidad correcta
-        producto.cantidadDisponible -= cantidadARestar;
+//     // Aquí tienes la lista de productos que deseas actualizar
+//     // Ahora puedes restar la cantidad correspondiente a cada producto
+//     // y actualizar la base de datos
+//     productos.forEach(producto => {
+//         // Encuentra la cantidad a restar de algún lugar (por ejemplo, desde el pedido)
+//         const cantidadARestar = 10; // Ejemplo, debes establecer la cantidad correcta
+//         producto.cantidadDisponible -= cantidadARestar;
 
-        // Guarda el producto actualizado en la base de datos
-        producto.save(function(err) {
-            if (err) {
-                console.error(err);
-            }
-        });
-    });
-});
+//         // Guarda el producto actualizado en la base de datos
+//         producto.save(function(err) {
+//             if (err) {
+//                 console.error(err);
+//             }
+//         });
+//     });
+// });
 
-// Supongamos que tienes un objeto de pedido en la variable "nuevoPedido"
+// // Supongamos que tienes un objeto de pedido en la variable "nuevoPedido"
 
-async function verificarStockPedido(pedido) {
-    for (const item of pedido.products) {
-      const producto = await Product.findById(item.product);
+// async function verificarStockPedido(pedido) {
+//     for (const item of pedido.products) {
+//       const producto = await Product.findById(item.product);
   
-      if (!producto) {
-        throw new Error(`Producto no encontrado: ${item.product}`);
-      }
+//       if (!producto) {
+//         throw new Error(`Producto no encontrado: ${item.product}`);
+//       }
   
-      if (producto.stock < item.amount) {
-        throw new Error(`Stock insuficiente para ${producto.nombre}`);
-      }
-    }
-  }
+//       if (producto.stock < item.amount) {
+//         throw new Error(`Stock insuficiente para ${producto.nombre}`);
+//       }
+//     }
+//   }
   
-// Supongamos que tienes un objeto de pedido en la variable "nuevoPedido"
+// // Supongamos que tienes un objeto de pedido en la variable "nuevoPedido"
 
-function verificarStockYGuardarPedido(pedido) {
-    verificarStockPedido(nuevoPedido)
-      .then(() => {
-        // Si pasa la verificación de stock, puedes guardar el pedido en la base de datos
-        return nuevoPedido.save();
-      })
-      .then(() => {
-        // También, actualiza el stock de los productos en este punto
-      })
-      .catch(error => {
-        console.error(error.message);
-        // Maneja el caso en que no haya suficiente stock
-      });
-  }
+// function verificarStockYGuardarPedido(pedido) {
+//     verificarStockPedido(nuevoPedido)
+//       .then(() => {
+//         // Si pasa la verificación de stock, puedes guardar el pedido en la base de datos
+//         return nuevoPedido.save();
+//       })
+//       .then(() => {
+//         // También, actualiza el stock de los productos en este punto
+//       })
+//       .catch(error => {
+//         console.error(error.message);
+//         // Maneja el caso en que no haya suficiente stock
+//       });
+//   }
   
-  // Luego, puedes llamar a la función
-  verificarStockYGuardarPedido(nuevoPedido);
+//   // Luego, puedes llamar a la función
+//   verificarStockYGuardarPedido(nuevoPedido);
    
 
 
-  // Supongamos que tienes un objeto de pedido en la variable "nuevoPedido"
+//   // Supongamos que tienes un objeto de pedido en la variable "nuevoPedido"
 
-// 1. Verificar y restar el stock al realizar un pedido
-async function procesarPedido(pedido) {
-    for (const item of pedido.products) {
-      const producto = await Product.findById(item.product);
+// // 1. Verificar y restar el stock al realizar un pedido
+// async function procesarPedido(pedido) {
+//     for (const item of pedido.products) {
+//       const producto = await Product.findById(item.product);
   
-      if (!producto) {
-        throw new Error(`Producto no encontrado: ${item.product}`);
-      }
+//       if (!producto) {
+//         throw new Error(`Producto no encontrado: ${item.product}`);
+//       }
   
-      if (producto.stock < item.amount) {
-        throw new Error(`Stock insuficiente para ${producto.nombre}`);
-      }
+//       if (producto.stock < item.amount) {
+//         throw new Error(`Stock insuficiente para ${producto.nombre}`);
+//       }
   
-      // Resta la cantidad pedida del stock del producto
-      producto.stock -= item.amount;
+//       // Resta la cantidad pedida del stock del producto
+//       producto.stock -= item.amount;
   
-      // Guarda el producto actualizado en la base de datos
-      await producto.save();
-    }
+//       // Guarda el producto actualizado en la base de datos
+//       await producto.save();
+//     }
   
-    // Luego, guarda el pedido en la base de datos
-    await nuevoPedido.save();
-  }
+//     // Luego, guarda el pedido en la base de datos
+//     await nuevoPedido.save();
+//   }
   
-  // Llama a la función para procesar el pedido
-  procesarPedido(nuevoPedido)
-    .then(() => {
-      // El pedido se ha procesado con éxito
-    })
-    .catch(error => {
-      console.error(error.message);
-      // Maneja el caso en que no haya suficiente stock
-    });
+//   // Llama a la función para procesar el pedido
+//   procesarPedido(nuevoPedido)
+//     .then(() => {
+//       // El pedido se ha procesado con éxito
+//     })
+//     .catch(error => {
+//       console.error(error.message);
+//       // Maneja el caso en que no haya suficiente stock
+//     });
   
+
+
+    /////orders
+    ////orders:
+// Nueva ruta para restar stock de un producto específico en todos los pedidos
+// router.put('/decrementStock/:productId/:amount', (req, res) => {
+//   const { productId, amount } = req.params;
+
+//   // Restar el stock del producto específico en todos los pedidos
+//   Orders.updateMany(
+//     { 'products.product': mongoose.Types.ObjectId(productId) },
+//     { $inc: { 'products.$.amount': -parseInt(amount) } }
+//   )
+//     .then((updatedOrders) => {
+//       // Verificar si hubo algún pedido actualizado
+//       if (updatedOrders.nModified > 0) {
+//         res.json({ message: 'Stock restado en todos los pedidos exitosamente.' });
+//       } else {
+//         res.status(404).json({ error: 'Producto no encontrado en ningún pedido.' });
+//       }
+//     })
+//     .catch((error) => {
+//       res.status(500).json({ error: 'Error interno del servidor.' });
+//     });
+// });
