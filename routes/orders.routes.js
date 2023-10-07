@@ -38,7 +38,9 @@ router.get('/' ,   async (req, res) => {
 });
 
 
-// Ruta para crear un nuevo pedido (borrado el middleware de autenticación temporalmente)
+
+
+//Este es ruta de administradora borraDO TEMPORALMENTE
 router.post("/create", /*isAuthenticated,*/ async (req, res, next) => {
   const { products, usuario} = req.body;   
 
