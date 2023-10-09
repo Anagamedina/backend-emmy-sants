@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const Product = require('../models/Product.model');
 const fileUploader = require('../config/cloudinary.config');
-// const multer = require('multer');
 const Storage = require('../models/Storage.model');
 
 // Importa el middleware isLoggedIn que contiene la función isAdmin
@@ -18,10 +17,9 @@ router.get('/' ,  (req, res) => {
 
 
 
- 
 // Ruta para crear un nuevo producto (accesible solo para administradores)
 router.post('/create', isAuthenticated, isAdmin, fileUploader.single('product-image'), (req, res) => {
-    const { nombre, descripcion, precio, categoria, imagen } = req.body; 
+    const { nombre, descripcion, precio, categoria, imagen ,cantidad} = req.body; 
   
     // Utiliza el método create para crear y guardar un nuevo producto en la base de datos
     Product.create({
@@ -36,7 +34,7 @@ router.post('/create', isAuthenticated, isAdmin, fileUploader.single('product-im
         //crear storage
         Storage.create({
           product: newlyCreatedProductFromDB,
-          amount: 10 //cantidad <input type="number" name="cantidad" placeholder="Cantidad de unidades disponibles">
+          amount: cantidad ||  1  //cantidad <input type="number" name="cantidad" placeholder="Cantidad de unidades disponibles">
         }).then(str=>console.log(str))
 
         //enviar respuesta
@@ -61,12 +59,13 @@ router.get('/:id' , (req, res) => {
     Storage.findOne({product:id} ).then((dataStorage)=>{
         
         let toSend = dataProduct.toJSON() 
-        toSend.amount = dataStorage.amount 
+        toSend.amount = dataStorage?.amount || "No hay"
         res.send( toSend ) 
-    })
+    }).catch(err => console.log(err))
 
-  }) 
+  }).catch(err => console.log(err)) 
 });
+ 
 
 // Ruta para actualizar un producto existente 
 
@@ -84,16 +83,6 @@ router.put('/:id' , isAuthenticated, isAdmin, fileUploader.single('product-image
     res.send(data)
   }) 
 });
-
-// router.put('/:id' /*,isAdmin*/, (req, res) => {
-//   let id = req.params.id
-//   let body = req.body
-  
-//   Product.findByIdAndUpdate(id,body, { new: true })
-//   .then(data=>{
-//     res.send(data)
-//   }) 
-//   });
 
 
 router.put('/:id/update-image', isAuthenticated, isAdmin,fileUploader.single('new-product-image'), (req, res) => {

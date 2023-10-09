@@ -1,129 +1,86 @@
 const router = require("express").Router();
 const Orders = require('../models/Orders.model');
-var mongoose = require('mongoose');
-const Product = require('../models/Product.model');
+const mongoose = require('mongoose');
 const Storage = require('../models/Storage.model');
 const { isAuthenticated } = require("../middleware/jwt.middleware.js");
-const { isAdmin } = require('../middleware/isLoggedIn');
-
-//Ruta para obtener lista de pedidos
+const { createStripeSession } = require('../utils/stripeHelper');
 
 
-// // Ejemplo de ruta para usuarios regulares
-// router.get('/orders/history', isAuthenticated, (req, res) => {
-  // req.payload  
-//   // Lógica para obtener el historial de pedidos del usuario
-//   // y mostrarlo en la página del usuario regular
-// });
+// Ruta para obtener el historial de pedidos de usuarios regulares
+router.get('/history', isAuthenticated, async (req, res) => {
+  const userId = req.payload._id;
+  console.log(req.payload);
+  try {
+    
+    const userOrders = await Orders.find({ usuario: userId })
+    .populate({ path: 'products', populate: { path: 'product' }})
 
-
-
-// router.get("/order/:id",  (req, res, next)=> {
-//   Orders.find ()
-//   .then((orders)=> {
-//       res.json(orders);  
-// })
-// .catch ((error) => {
-//   res.status(500).json ({ error});
-//   });
-// })
-
-
-
-
-// /api/orders 
-router.get('/' , isAuthenticated, isAdmin, async (req, res) => {
-  Orders.find()
-  .populate({ path: 'products', populate: { path: 'product' }})
-  .then(data=>{
-    res.send(data)
-  })
+    res.send(userOrders);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener el historial de pedidos.' });
+  }
 });
 
 
+// Ruta para obtener todos los pedidos (requiere autenticación y ser administrador)
+router.get('/' ,   async (req, res) => {
+  Orders.find()
+    .populate({ path: 'products', populate: { path: 'product' }})
+    .then(data=>{
+      res.send(data)
+    })
+});
 
 
-//Este es ruta de administradora por lo de storage?
-router.post("/create", isAuthenticated, (req, res, next) => {
-  const { products, usuario} = req.body;  
-   
-//convertir en ObjetId
-  let productsOID = products.map(p =>({product: new mongoose.Types.ObjectId(p.product), amount:p.amount}))
+// Ruta para crear un nuevo pedido (borrado el middleware de autenticación temporalmente)
+router.post("/create",  isAuthenticated,  async (req, res, next) => {
+  // console.log(req.payload);
+
+  const { products ,totalAmount} = req.body;   
+  const usuario = req.payload
+  // Convertir en ObjectIds y crear el pedido
+  let productsOID = products.map(p => ({ product: new mongoose.Types.ObjectId(p.product), amount: p.amount }));
   Orders.create({
     products: productsOID,
-    usuario
-  }).then((order) => {
- 
-      console.log(products);
-      products.map(({product, amount}) => { 
-        return Storage.findOneAndUpdate({product:product} , { $inc: { amount: -amount} }).then(x=>{
-          console.log(x);
-        })
-      }) 
+    usuario,
+    state: "Pendiente",
+  }).then(async (order) => { 
+      // Actualiza la cantidad de productos en el almacen
+      products.map(({ product, amount }) => { 
+        return Storage.findOneAndUpdate({ product: product }, { $inc: { amount: -amount } }).then(x=>{ console.log(x); })
+      })  
 
-  
-      res.json(order)  
-
-
+      let stripeSession = await createStripeSession(order._id, Number(totalAmount)); 
+      let orderUpdated = await Orders.findByIdAndUpdate(order._id, {strapiID: stripeSession.id}, {new: true})
+        
+      res.json( orderUpdated )  
     })
     .catch((err) => res.json(err));
 });
 
-//localhost3000/orderFInish?orderid=lksdafdasdnpasdjasdadasd
-
-
-//ruta para obtener detalles de un pedido especifico
+// Ruta para obtener detalles de un pedido específico
 router.get("/orders/:id", (req, res, next) => {
   let id = req.params.id
-  let body = req.body
-
-
-  Orders.findByIdAndUpdate(id,body).then(data=>{
+  Orders.findById(id).then(data=>{
     res.send(data)
   })
 });
 
 
-router.put('/orders/:id' , (req, res) => {
-  let id = req.params.id
-  let body = req.body
 
+////enviar por email o sms HABLARLO CON ALEJANDRO 
 
-  Product.findByIdAndUpdate(id,body).then(data=>{
-    res.send(data)
-  })
-});
+// // Ruta para actualizar un pedido específico (pendiente de implementar)
+// router.put('/orders/:id' , (req, res) => {
+//   let id = req.params.id
+//   let body = req.body
 
-// Nueva ruta para restar stock de un producto específico en todos los pedidos
-// router.put('/decrementStock/:productId/:amount', (req, res) => {
-//   const { productId, amount } = req.params;
-
-//   // Restar el stock del producto específico en todos los pedidos
-//   Orders.updateMany(
-//     { 'products.product': mongoose.Types.ObjectId(productId) },
-//     { $inc: { 'products.$.amount': -parseInt(amount) } }
-//   )
-//     .then((updatedOrders) => {
-//       // Verificar si hubo algún pedido actualizado
-//       if (updatedOrders.nModified > 0) {
-//         res.json({ message: 'Stock restado en todos los pedidos exitosamente.' });
-//       } else {
-//         res.status(404).json({ error: 'Producto no encontrado en ningún pedido.' });
-//       }
-//     })
-//     .catch((error) => {
-//       res.status(500).json({ error: 'Error interno del servidor.' });
-//     });
+  
+//   // Implementa la lógica de actualización
+//   Orders.findByIdAndUpdate(id, body).then(data=>{
+//     res.send(data)
+//   })
 // });
-
-router.delete('/orders/:id', (req, res) => {
-  let id = req.params.id
-
-
-  Product.findByIdAndDelete(id ).then(data=>{
-    res.send(data)
-  })  
-});
-
 
 module.exports = router;
