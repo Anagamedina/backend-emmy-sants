@@ -69,20 +69,58 @@ router.get('/:id' , (req, res) => {
 
 // Ruta para actualizar un producto existente 
 
-//put ->  http://localhost:5005/api/products/650b3a7a44f240378c459dae
-router.put('/:id' , isAuthenticated, isAdmin, fileUploader.single('product-image'), (req, res) => {
-  let id = req.params.id
-  let body = req.body
+
+// Ruta para actualizar un producto existente
+router.put('/:id', isAuthenticated, isAdmin, fileUploader.single('product-image'), async (req, res) => {
+  const id = req.params.id;
+  const { nombre, descripcion, precio, categoria, imagen, cantidad } = req.body;
+
+  try {
+    const updatedProduct = await Product.findByIdAndUpdate(
+      id,
+      {
+        nombre,
+        descripcion,
+        precio,
+        categoria,
+        imagen: req.file ? req.file.path : imagen, // Si se proporciona una nueva imagen, usa esa; de lo contrario, usa la imagen existente
+      },
+      { new: true }
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ error: 'Producto no encontrado.' });
+    }
+
+    // Actualiza la cantidad en el almacenamiento
+    const storage = await Storage.findOne({ product: id });
+    if (storage) {
+      storage.amount = cantidad || 1; // Usar el valor proporcionado o 1 si no se proporciona cantidad
+      await storage.save();
+    }
+
+    res.json(updatedProduct);
+  } catch (error) {
+    console.error(`Error al actualizar el producto: ${error}`);
+    res.status(500).json({ error: 'Error interno del servidor.' });
+  }
+});
+
+
+// //put ->  http://localhost:5005/api/products/650b3a7a44f240378c459dae
+// router.put('/:id' , isAuthenticated, isAdmin, fileUploader.single('product-image'), (req, res) => {
+//   let id = req.params.id
+//   let body = req.body
   
   
-  Product.findByIdAndUpdate(id,body, { new: true }).then(data=>{
+//   Product.findByIdAndUpdate(id,body, { new: true }).then(data=>{
 
     
-    // Storage.findOneAndUpdate({product:id})
+//     // Storage.findOneAndUpdate({product:id})
 
-    res.send(data)
-  }) 
-});
+//     res.send(data)
+//   }) 
+// });
 
 
 router.put('/:id/update-image', isAuthenticated, isAdmin,fileUploader.single('new-product-image'), (req, res) => {
