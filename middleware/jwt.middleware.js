@@ -9,6 +9,19 @@ const isAuthenticated = jwt({
   getToken: getTokenFromHeaders,
 });
 
+// const jwtMW = jwt({
+//   secret: process.env.TOKEN_SECRET ,
+//   algorithms: ["HS256"],
+//   requestProperty: "payload",
+//   getToken: getTokenFromHeaders,
+// });
+// const isAuthenticated = (res,req,next) =>{
+//   try{
+//     jwtMW(res,req,next) 
+//   }catch{
+//     res.send("err token")
+//   }
+// }
 // Function used to extract the JWT token from the request's 'Authorization' Headers
 function getTokenFromHeaders(req) {
   // Check if the token is available on the request Headers

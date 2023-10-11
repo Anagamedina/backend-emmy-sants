@@ -69,7 +69,6 @@ router.get('/:id' , (req, res) => {
 
 // Ruta para actualizar un producto existente 
 
-
 // Ruta para actualizar un producto existente
 router.put('/:id', isAuthenticated, isAdmin, fileUploader.single('product-image'), async (req, res) => {
   const id = req.params.id;
@@ -105,6 +104,9 @@ router.put('/:id', isAuthenticated, isAdmin, fileUploader.single('product-image'
     res.status(500).json({ error: 'Error interno del servidor.' });
   }
 });
+
+
+
 
 
 // //put ->  http://localhost:5005/api/products/650b3a7a44f240378c459dae
