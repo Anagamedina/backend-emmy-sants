@@ -33,14 +33,14 @@ router.get('/' ,   async (req, res) => {
 });
 
 
-// Ruta para crear un nuevo pedido (borrado el middleware de autenticación temporalmente)
-router.post("/create",  isAuthenticated,  async (req, res, next) => {
-  // console.log(req.payload);
 
-  const { products ,totalAmount} = req.body;   
-  const usuario = req.payload
-  // Convertir en ObjectIds y crear el pedido
-  let productsOID = products.map(p => ({ product: new mongoose.Types.ObjectId(p.product), amount: p.amount }));
+
+//Este es ruta de administradora borraDO TEMPORALMENTE
+router.post("/create", /*isAuthenticated,*/ async (req, res, next) => {
+  const { products, usuario} = req.body;  
+  let stripeSession = await createStripeSession()
+//convertir en ObjetId
+  let productsOID = products.map(p =>({product: new mongoose.Types.ObjectId(p.product), amount:p.amount}))
   Orders.create({
     products: productsOID,
     usuario,
