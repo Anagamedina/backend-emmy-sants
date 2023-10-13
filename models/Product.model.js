@@ -6,12 +6,13 @@ const ProductSchema = new Schema(
     nombre: String,
     descripcion: String,
     precio: Number,
-    // stock: Number,
+    //stock: Number,
     categoria: {
       type: String,
       enum: ["plantas", "ramos"],
     }, 
     imagen: String,  
+    aidescripcion: String
   },
   );
 

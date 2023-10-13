@@ -29,7 +29,16 @@ router.get('/' ,   async (req, res) => {
     .populate({ path: 'products', populate: { path: 'product' }})
     .then(data=>{
       res.send(data)
-    })
+      // .populate([
+      //   { path: 'products', populate: { path: 'product' } }, // Poblar productos y sus referencias
+      //   { path: 'usuario' } // Poblar el usuario
+      // ])
+      // .then(data => {
+      //   res.send(data);
+      // })
+      // .catch(error => {
+      //   res.status(500).send(error);
+      });
 });
 
 
@@ -58,6 +67,19 @@ router.post("/create",  isAuthenticated,  async (req, res, next) => {
     })
     .catch((err) => res.json(err));
 });
+
+// CODIGO ALEJANDRO 
+//Este es ruta de administradora borraDO TEMPORALMENTE
+// router.post("/create", /*isAuthenticated,*/ async (req, res, next) => {
+//   const { products, usuario} = req.body;  
+//   let stripeSession = await createStripeSession()
+// //convertir en ObjetId
+//   let productsOID = products.map(p =>({product: new mongoose.Types.ObjectId(p.product), amount:p.amount}))
+
+
+
+
+
 
 // Ruta para obtener detalles de un pedido específico
 router.get("/orders/:id", (req, res, next) => {
