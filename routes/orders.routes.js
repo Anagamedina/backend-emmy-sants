@@ -6,7 +6,7 @@ const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 const { createStripeSession } = require('../utils/stripeHelper');
 
 
-// Ruta para obtener el historial de pedidos de usuarios regulares
+// // Ruta para obtener el historial de pedidos de usuarios regulares
 router.get('/history', isAuthenticated, async (req, res) => {
   const userId = req.payload._id;
   console.log(req.payload);
@@ -23,16 +23,21 @@ router.get('/history', isAuthenticated, async (req, res) => {
 });
 
 
+
 // Ruta para obtener todos los pedidos (requiere autenticación y ser administrador)
-router.get('/' ,   async (req, res) => {
+router.get('/', async (req, res) => {
   Orders.find()
-    .populate({ path: 'products', populate: { path: 'product' }})
-    .then(data=>{
-      res.send(data)
+    .populate([
+      { path: 'products', populate: { path: 'product' } }, // Poblar productos y sus referencias
+      { path: 'usuario' } // Poblar el usuario
+    ])
+    .then(data => {
+      res.send(data);
     })
+    .catch(error => {
+      res.status(500).send(error);
+    });
 });
-
-
 
 
 //Este es ruta de administradora borraDO TEMPORALMENTE
