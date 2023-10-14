@@ -6,7 +6,7 @@ const { isAuthenticated } = require("../middleware/jwt.middleware.js");
 const { createStripeSession } = require('../utils/stripeHelper');
 
 
-// Ruta para obtener el historial de pedidos de usuarios regulares
+// // Ruta para obtener el historial de pedidos de usuarios regulares
 router.get('/history', isAuthenticated, async (req, res) => {
   const userId = req.payload._id;
   console.log(req.payload);
@@ -23,33 +23,29 @@ router.get('/history', isAuthenticated, async (req, res) => {
 });
 
 
+
+
 // Ruta para obtener todos los pedidos (requiere autenticación y ser administrador)
-router.get('/' ,   async (req, res) => {
+router.get('/', async (req, res) => {
   Orders.find()
-    .populate({ path: 'products', populate: { path: 'product' }})
-    .then(data=>{
-      res.send(data)
-      // .populate([
-      //   { path: 'products', populate: { path: 'product' } }, // Poblar productos y sus referencias
-      //   { path: 'usuario' } // Poblar el usuario
-      // ])
-      // .then(data => {
-      //   res.send(data);
-      // })
-      // .catch(error => {
-      //   res.status(500).send(error);
-      });
+    .populate([
+      { path: 'products', populate: { path: 'product' } }, // Poblar productos y sus referencias
+      { path: 'usuario' } // Poblar el usuario
+    ])
+    .then(data => {
+      res.send(data);
+    })
+    .catch(error => {
+      res.status(500).send(error);
+    });
 });
 
-
-// Ruta para crear un nuevo pedido (borrado el middleware de autenticación temporalmente)
-router.post("/create",  isAuthenticated,  async (req, res, next) => {
-  // console.log(req.payload);
-
-  const { products ,totalAmount} = req.body;   
-  const usuario = req.payload
-  // Convertir en ObjectIds y crear el pedido
-  let productsOID = products.map(p => ({ product: new mongoose.Types.ObjectId(p.product), amount: p.amount }));
+//Este es ruta de administradora borraDO TEMPORALMENTE
+router.post("/create", /*isAuthenticated,*/ async (req, res, next) => {
+  const { products, usuario} = req.body;  
+  let stripeSession = await createStripeSession()
+//convertir en ObjetId
+  let productsOID = products.map(p =>({product: new mongoose.Types.ObjectId(p.product), amount:p.amount}))
   Orders.create({
     products: productsOID,
     usuario,
@@ -68,14 +64,6 @@ router.post("/create",  isAuthenticated,  async (req, res, next) => {
     .catch((err) => res.json(err));
 });
 
-// CODIGO ALEJANDRO 
-//Este es ruta de administradora borraDO TEMPORALMENTE
-// router.post("/create", /*isAuthenticated,*/ async (req, res, next) => {
-//   const { products, usuario} = req.body;  
-//   let stripeSession = await createStripeSession()
-// //convertir en ObjetId
-//   let productsOID = products.map(p =>({product: new mongoose.Types.ObjectId(p.product), amount:p.amount}))
-
 
 
 
@@ -90,19 +78,5 @@ router.get("/orders/:id", (req, res, next) => {
 });
 
 
-
-////enviar por email o sms HABLARLO CON ALEJANDRO 
-
-// // Ruta para actualizar un pedido específico (pendiente de implementar)
-// router.put('/orders/:id' , (req, res) => {
-//   let id = req.params.id
-//   let body = req.body
-
-  
-//   // Implementa la lógica de actualización
-//   Orders.findByIdAndUpdate(id, body).then(data=>{
-//     res.send(data)
-//   })
-// });
 
 module.exports = router;

@@ -9,8 +9,8 @@ const OrdersSchema = new Schema(
         amount: Number
       }
     ],
-    usuario: { type: Schema.Types.ObjectId, ref: 'Usuario' },
-    // usuario: { type: Schema.Types.ObjectId, ref: 'User' },
+    usuario: { type: Schema.Types.ObjectId, ref: 'User' },
+    // se cambio Usuario por User
     state: {
       type: String,
       enum: Object.values(OrderStatus), // Asegura que solo sea un estado de pedido válido
@@ -27,3 +27,4 @@ const OrdersSchema = new Schema(
 const Orders = model("Orders", OrdersSchema);
 
 module.exports = Orders;
+
