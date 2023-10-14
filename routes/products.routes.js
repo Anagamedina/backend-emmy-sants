@@ -63,7 +63,7 @@ router.post('/create', isAuthenticated, isAdmin, fileUploader.single('product-im
         //crear storage
         Storage.create({
           product: newlyCreatedProductFromDB,
-          amount: cantidad ||  1  //cantidad <input type="number" name="cantidad" placeholder="Cantidad de unidades disponibles">
+          amount: cantidad ||  1  
         }).then(str=>console.log(str))
 
         //enviar respuesta
@@ -136,23 +136,6 @@ router.put('/:id', isAuthenticated, isAdmin, fileUploader.single('product-image'
 });
 
 
-
-
-
-// //put ->  http://localhost:5005/api/products/650b3a7a44f240378c459dae
-// router.put('/:id' , isAuthenticated, isAdmin, fileUploader.single('product-image'), (req, res) => {
-//   let id = req.params.id
-//   let body = req.body
-  
-  
-//   Product.findByIdAndUpdate(id,body, { new: true }).then(data=>{
-
-    
-//     // Storage.findOneAndUpdate({product:id})
-
-//     res.send(data)
-//   }) 
-// });
 
 
 router.put('/:id/update-image', isAuthenticated, isAdmin,fileUploader.single('new-product-image'), (req, res) => {
