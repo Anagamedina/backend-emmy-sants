@@ -1,0 +1,50 @@
+.profile-page {
+    text-align: center;
+    padding: 20px;
+}
+
+.order-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.order-card {
+    width: 48%;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.order-date {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.order-details {
+    margin-bottom: 10px;
+}
+
+.order-total {
+    font-weight: bold;
+}
+
+.product-info {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.product-image {
+    width: 40px; /* Tamaño de la imagen más pequeño */
+    height: auto;
+    margin-right: 10px;
+}
+
+.product-name {
+    font-weight: bold;
+}
+
+/* Otros estilos ... */

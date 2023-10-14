@@ -25,6 +25,14 @@ router.get('/history', isAuthenticated, async (req, res) => {
 
 
 // Ruta para obtener todos los pedidos (requiere autenticación y ser administrador)
+// router.get('/' ,   async (req, res) => {
+//   Orders.find()
+//     .populate({ path: 'products', populate: { path: 'product' }})
+//     .then(data=>{
+//       res.send(data)
+//     })
+// });
+// Ruta para obtener todos los pedidos (requiere autenticación y ser administrador)
 router.get('/', async (req, res) => {
   Orders.find()
     .populate([
@@ -38,7 +46,6 @@ router.get('/', async (req, res) => {
       res.status(500).send(error);
     });
 });
-
 
 //Este es ruta de administradora borraDO TEMPORALMENTE
 router.post("/create", /*isAuthenticated,*/ async (req, res, next) => {
