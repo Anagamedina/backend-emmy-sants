@@ -47,8 +47,8 @@ const aiChatGPT = async (prompt2) => {
 router.post('/create', isAuthenticated, isAdmin, fileUploader.single('product-image'),async (req, res) => {
     const { nombre, descripcion, precio, categoria, imagen ,cantidad} = req.body; 
   
-     let aiData = await aiChatGPT(nombre)
-    console.log(aiData);
+    // let aiData = await aiChatGPT(nombre)
+    // console.log(aiData);
     // Utiliza el método create para crear y guardar un nuevo producto en la base de datos
     Product.create({
       nombre,
@@ -56,14 +56,14 @@ router.post('/create', isAuthenticated, isAdmin, fileUploader.single('product-im
       precio,
       categoria,
       imagen: req?.file?.path,
-      aidescripcion: aiData
+      // aidescripcion: aiData
     })
       .then(newlyCreatedProductFromDB => {
 
         //crear storage
         Storage.create({
           product: newlyCreatedProductFromDB,
-          amount: cantidad ||  1  
+          amount:  Number(cantidad) ||  1  
         }).then(str=>console.log(str))
 
         //enviar respuesta
