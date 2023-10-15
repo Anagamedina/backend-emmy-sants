@@ -3,7 +3,7 @@ const Stripe = require("stripe");
 const stripe = new Stripe("sk_test_51NworTIamvwN9XVUBzNti2WhGDvdoagrQ3RDOxcsTpO2C7M8efP7Y18pkAsuY7iBpg1v9aZp2WOrTOml0N5qFcK500USulMfhg");
 
 // Función asincrónica para crear una sesión de Stripe
-async function createStripeSession(id, amount, storeName ="floristeria-emmy-sants", currency = "EUR", domainNameFront = "http://localhost:3000") {
+async function createStripeSession(id, amount, storeName ="floristeria-emmy-sants", currency = "EUR", domainNameFront = process.env.ORIGIN || "http://localhost:3000") {
   try {
     // Crear una sesión de Stripe 
     const session = await stripe.checkout.sessions.create({
