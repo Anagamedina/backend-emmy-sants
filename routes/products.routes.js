@@ -175,6 +175,21 @@ router.put('/:id/update-image', isAuthenticated, isAdmin,fileUploader.single('ne
     res.send(data)
   })  
   });
+
+
+  router.get('/:id/storage', (req, res) => {
+    const { id } = req.params;
+    
+    Storage.findOne({ product: id })
+      .then((data) => {
+        const amount = data ? data.amount : 0;
+        res.json({ amount });
+      })
+      .catch((error) => {
+        console.error(`Error al obtener el almacenamiento del producto: ${error}`);
+        res.status(500).json({ error: 'Error interno del servidor.' });
+      });
+  });
   
   
   
