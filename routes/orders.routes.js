@@ -40,8 +40,8 @@ router.get('/', async (req, res) => {
     });
 });
 
-//Este es ruta de administradora borraDO TEMPORALMENTE
-router.post("/create", /*isAuthenticated,*/ async (req, res, next) => {
+//Este es ruta de administradora 
+router.post("/create", isAuthenticated, async (req, res, next) => {
   const { products, totalAmount} = req.body;  
   const usuario = req.payload
   // let stripeSession = await createStripeSession()
