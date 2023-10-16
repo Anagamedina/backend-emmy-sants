@@ -22,7 +22,7 @@ async function createStripeSession(id, amount, storeName ="floristeria-emmy-sant
       ],
       mode: "payment", 
       success_url: `${domainNameFront}/success?id=${id}`, // URL de éxito después del pago
-      cancel_url: `${domainNameFront}/categories?canceled=true`, // URL en caso de cancelación del pago
+      cancel_url: `${domainNameFront}/`, // URL en caso de cancelación del pago
     });
 
     return session; // Devuelve la sesión creada
