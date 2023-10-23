@@ -40,10 +40,11 @@ router.get('/', async (req, res) => {
     });
 });
 
-//Este es ruta de administradora borraDO TEMPORALMENTE
-router.post("/create", /*isAuthenticated,*/ async (req, res, next) => {
-  const { products, usuario} = req.body;  
-  let stripeSession = await createStripeSession()
+//Este es ruta de administradora 
+router.post("/create", isAuthenticated, async (req, res, next) => {
+  const { products, totalAmount} = req.body;  
+  const usuario = req.payload
+  // let stripeSession = await createStripeSession()
 //convertir en ObjetId
   let productsOID = products.map(p =>({product: new mongoose.Types.ObjectId(p.product), amount:p.amount}))
   Orders.create({
@@ -80,3 +81,4 @@ router.get("/orders/:id", (req, res, next) => {
 
 
 module.exports = router;
+
