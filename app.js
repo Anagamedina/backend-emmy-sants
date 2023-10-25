@@ -11,7 +11,7 @@ app.use(express.json());
 
 require("./config")(app);
 
-// 👇 Start handling routes here
+// 👇 Start handling routes
 const indexRoutes = require("./routes/index.routes");
 const authRoutes = require("./routes/auth.routes");
 const productsRoutes = require("./routes/products.routes");
